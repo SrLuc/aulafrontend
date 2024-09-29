@@ -1,0 +1,144 @@
+import axios from "axios";
+import React, { useState } from "react";
+import "./App.css";
+
+function App() {
+  // Definir o estado para armazenar os valores do formulário
+  const [formValues, setFormValues] = useState({
+    name: "",
+    type: "",
+    speed: "",
+    coverageArea: "",
+    price: "",
+    contactPhone: "",
+    contactEmail: "",
+    website: "",
+    supportPhone: "",
+    supportEmail: "",
+    ratings: "",
+  });
+
+  // Manipulador para atualizar o estado ao alterar os campos
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  // Manipulador para enviar o formulário
+  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Separar a área de cobertura em um array
+    const coverageAreaArray = formValues.coverageArea.split(",").map(area => area.trim());
+
+    // Construir o corpo do objeto a ser enviado
+    const providerData = {
+      id: Math.floor(Math.random() * 1000), // ID aleatório
+      name: formValues.name,
+      type: formValues.type,
+      speed: formValues.speed,
+      coverageArea: coverageAreaArray,
+      price: parseFloat(formValues.price),
+      ratings: parseFloat(formValues.ratings),
+      contact: {
+        phone: formValues.contactPhone,
+        email: formValues.contactEmail,
+        website: formValues.website,
+      },
+      support: {
+        phone: formValues.supportPhone,
+        email: formValues.supportEmail,
+      },
+    };
+
+    // Enviar o POST para o backend
+    axios
+      .post("http://localhost:3001/api/providers", providerData)
+      .then((response) => {
+        alert("Provider created successfully!");
+        console.log("Response:", response.data);
+        // Resetar o formulário após o envio
+        setFormValues({
+          name: "",
+          type: "",
+          speed: "",
+          coverageArea: "",
+          price: "",
+          contactPhone: "",
+          contactEmail: "",
+          website: "",
+          supportPhone: "",
+          supportEmail: "",
+          ratings: "",
+        });
+      })
+      .catch((error) => {
+        console.error("There was an error creating the provider:", error);
+        alert("Failed to create provider.");
+      });
+  };
+
+  return (
+    <div>
+      <form onSubmit={submitForm} className="formstyle">
+        {/* Nome do Provedor */}
+        <label htmlFor="name">Nome do Provedor:</label>
+        <input type="text" name="name" id="name" value={formValues.name} onChange={handleChange} />
+
+        {/* Tipo de Conexão */}
+        <label htmlFor="type">Tipo de Conexão:</label>
+        <select name="type" id="type" value={formValues.type} onChange={handleChange}>
+          <option value="">Selecione</option>
+          <option value="Fibra Óptica">Fibra Óptica</option>
+          <option value="DSL">DSL</option>
+          <option value="Cabo">Cabo</option>
+          <option value="Satélite">Satélite</option>
+        </select>
+
+        {/* Velocidade */}
+        <label htmlFor="speed">Velocidade (Mbps):</label>
+        <input type="text" name="speed" id="speed" value={formValues.speed} onChange={handleChange} />
+
+        {/* Área de Cobertura */}
+        <label htmlFor="coverageArea">Áreas de Cobertura (separadas por vírgula):</label>
+        <input type="text" name="coverageArea" id="coverageArea" value={formValues.coverageArea} onChange={handleChange} />
+
+        {/* Preço */}
+        <label htmlFor="price">Preço (R$):</label>
+        <input type="number" name="price" id="price" value={formValues.price} onChange={handleChange} />
+
+        {/* Telefone de Contato */}
+        <label htmlFor="contactPhone">Telefone de Contato:</label>
+        <input type="text" name="contactPhone" id="contactPhone" value={formValues.contactPhone} onChange={handleChange} />
+
+        {/* E-mail de Contato */}
+        <label htmlFor="contactEmail">E-mail de Contato:</label>
+        <input type="text" name="contactEmail" id="contactEmail" value={formValues.contactEmail} onChange={handleChange} />
+
+        {/* Website */}
+        <label htmlFor="website">Website:</label>
+        <input type="text" name="website" id="website" value={formValues.website} onChange={handleChange} />
+
+        {/* Telefone de Suporte */}
+        <label htmlFor="supportPhone">Telefone de Suporte:</label>
+        <input type="text" name="supportPhone" id="supportPhone" value={formValues.supportPhone} onChange={handleChange} />
+
+        {/* E-mail de Suporte */}
+        <label htmlFor="supportEmail">E-mail de Suporte:</label>
+        <input type="text" name="supportEmail" id="supportEmail" value={formValues.supportEmail} onChange={handleChange} />
+
+        {/* Avaliações */}
+        <label htmlFor="ratings">Avaliações:</label>
+        <input type="number" name="ratings" id="ratings" value={formValues.ratings} onChange={handleChange} />
+
+        {/* Botão de Envio */}
+        <input type="submit" value="Enviar" />
+      </form>
+    </div>
+  );
+}
+
+export default App;
