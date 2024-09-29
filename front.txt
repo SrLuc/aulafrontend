@@ -56,7 +56,7 @@ function App() {
 
     // Enviar o POST para o backend
     axios
-      .post("http://localhost:3001/api/providers", providerData)
+      .post("http://localhost:3001/api/users", providerData)
       .then((response) => {
         alert("Provider created successfully!");
         console.log("Response:", response.data);

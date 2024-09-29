@@ -1,23 +1,31 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { internetProviders } = require('./models');
+const { users } = require("./models")
+const { providerDataArray } = require("./models")
+
+
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send('Hello World');
+});     
 
 app.get("/api/users", (req, res) => {
-    res.json(internetProviders);
-});
+    res.json(providerDataArray)
+})
 
 app.post("/api/users", (req, res) => {
     const { name, type, speed, coverageArea, price, contact, ratings, support } = req.body;
-    const id = internetProviders.length + 1;
+    const id = providerDataArray.length + 1;
     const newProvider = { id, name, type, speed, coverageArea, price, contact, ratings, support };
-    internetProviders.push(newProvider);
+    providerDataArray.push(newProvider);
     res.json(newProvider);
 });
 
+
 app.listen(3001, () => {
-    console.log('Server is running on http://localhost:3001');
-});
+    console.log('Server is running on port 3001');
+}
+);

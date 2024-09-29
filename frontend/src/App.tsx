@@ -2,7 +2,6 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
